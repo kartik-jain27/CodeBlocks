@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "cta-1",
+  "type": "registry:block",
+  "title": "Email Capture CTA",
+  "description": "A full-width call-to-action section with audience-focused copy and email capture.",
+  "isPro": true,
+  "category": "cta",
+  "dependencies": ["lucide-react"],
+  "registryDependencies": ["button", "input", "badge"],
+  "files": [
+    {
+      "path": "components/blocks/cta/cta-1.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

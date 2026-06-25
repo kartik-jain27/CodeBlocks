@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "dashboard-1",
+  "type": "registry:block",
+  "title": "Founder Metrics Dashboard",
+  "description": "A dashboard block with KPI cards, a simple chart, and recent customer activity.",
+  "isPro": true,
+  "category": "dashboard",
+  "dependencies": ["lucide-react"],
+  "registryDependencies": ["badge", "card"],
+  "files": [
+    {
+      "path": "components/blocks/dashboard/dashboard-1.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

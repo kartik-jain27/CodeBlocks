@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-shell-1",
+  "type": "registry:block",
+  "title": "SaaS App Shell",
+  "description": "A complete sidebar, header, and main-content shell for authenticated products.",
+  "isPro": true,
+  "category": "app-shell",
+  "dependencies": ["lucide-react"],
+  "registryDependencies": ["button", "badge"],
+  "files": [
+    {
+      "path": "components/blocks/app-shell/app-shell-1.tsx",
+      "type": "registry:component"
+    }
+  ]
+}
