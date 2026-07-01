@@ -65,7 +65,7 @@ export function DashboardOne({
             <h2 className="text-3xl font-semibold tracking-normal">{title}</h2>
             <p className="mt-2 text-sm text-muted-foreground">{description}</p>
           </div>
-          <Badge variant="secondary" className="w-fit">
+          <Badge variant="success" className="w-fit">
             Live metrics
           </Badge>
         </div>
@@ -77,12 +77,12 @@ export function DashboardOne({
               <Card key={stat.label}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardDescription>{stat.label}</CardDescription>
-                  <Icon aria-hidden="true" className="size-4 text-muted-foreground" />
+                  <Icon aria-hidden="true" className="size-4 text-accent" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-semibold">{stat.value}</div>
                   <div className="mt-2 flex items-center gap-1 text-sm text-muted-foreground">
-                    <ArrowUpRight aria-hidden="true" className="size-4 text-foreground" />
+                    <ArrowUpRight aria-hidden="true" className="size-4 text-success" />
                     {stat.delta} from last month
                   </div>
                 </CardContent>
@@ -97,11 +97,11 @@ export function DashboardOne({
               <CardDescription>Last 8 weeks</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex h-56 items-end gap-3 rounded-md bg-muted/40 p-4">
+              <div className="flex h-56 items-end gap-3 rounded-md border border-border-muted bg-background p-4">
                 {bars.map((height, index) => (
                   <div
                     key={`${height}-${index}`}
-                    className={`flex-1 rounded-t-md bg-primary/80 ${height}`}
+                    className={`flex-1 rounded-t-md bg-primary ${height}`}
                   />
                 ))}
               </div>
@@ -117,7 +117,7 @@ export function DashboardOne({
                 {activity.map(([customer, event, value]) => (
                   <div
                     key={`${customer}-${event}`}
-                    className="flex items-center justify-between gap-3 rounded-md border p-3"
+                    className="flex items-center justify-between gap-3 rounded-md border border-border-muted bg-background p-3"
                   >
                     <div>
                       <div className="text-sm font-medium">{customer}</div>

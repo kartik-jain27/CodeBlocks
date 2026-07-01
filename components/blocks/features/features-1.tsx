@@ -72,9 +72,12 @@ export function FeaturesOne({
             const Icon = feature.icon;
 
             return (
-              <Card key={feature.title}>
+              <Card
+                key={feature.title}
+                className="transition-colors hover:border-border hover:bg-surface-hover/40"
+              >
                 <CardHeader>
-                  <span className="flex size-10 items-center justify-center rounded-md bg-muted">
+                  <span className="flex size-10 items-center justify-center rounded-md border border-accent/30 bg-accent-subtle text-accent">
                     <Icon aria-hidden="true" className="size-5" />
                   </span>
                   <CardTitle className="text-xl">{feature.title}</CardTitle>

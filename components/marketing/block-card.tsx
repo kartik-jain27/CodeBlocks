@@ -17,7 +17,7 @@ export function BlockCard({ block }: BlockCardProps) {
   const command = getInstallCommand(block);
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden transition-all duration-200 hover:shadow-[var(--neo-raised-lg)]">
       <CardHeader>
         <div className="flex items-start justify-between gap-3">
           <div>
@@ -26,19 +26,25 @@ export function BlockCard({ block }: BlockCardProps) {
               {block.description}
             </p>
           </div>
-          <Badge variant={block.isPro ? "default" : "secondary"}>
+          <Badge variant={block.isPro ? "pro" : "success"}>
             {block.isPro ? "Pro" : "Free"}
           </Badge>
         </div>
       </CardHeader>
       <CardContent>
         <BlockVisual block={block} blurred={block.isPro} />
-        <div className="mt-4 rounded-md border bg-muted/40 p-3 font-mono text-xs text-muted-foreground">
+        <div className="mt-4 overflow-x-auto rounded-xl bg-surface p-3 font-mono text-xs text-muted-foreground shadow-[var(--neo-inset-sm)]">
           {command}
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
+          <Button asChild size="sm">
+            <Link href={`/blocks/${block.category}/${block.name}`}>
+              View block
+              <ArrowRight aria-hidden="true" />
+            </Link>
+          </Button>
           {block.isPro ? (
-            <Button asChild size="sm">
+            <Button asChild size="sm" variant="outline">
               <Link href="/pricing">
                 <LockKeyhole aria-hidden="true" />
                 Unlock Pro
@@ -49,9 +55,8 @@ export function BlockCard({ block }: BlockCardProps) {
           )}
           <CopyCommandButton command={command} />
           <Button asChild variant="ghost" size="sm">
-            <Link href={`/api/r/${block.name}`}>
+            <Link href={`/api/r/${block.isPro ? `pro/${block.name}` : block.name}`}>
               JSON
-              <ArrowRight aria-hidden="true" />
             </Link>
           </Button>
         </div>

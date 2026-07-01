@@ -12,19 +12,21 @@ import { createClient } from "@/lib/supabase";
 export const dynamic = "force-dynamic";
 
 export default async function AccountPage() {
-  const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+  const hasServerClerk = Boolean(
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY,
+  );
   let userId: string | null = null;
 
-  if (hasClerk) {
+  if (hasServerClerk) {
     const session = await auth();
     userId = session.userId;
 
     if (!userId) {
-      redirect("/");
+      redirect("/sign-in?redirect_url=/account");
     }
   }
 
-  const user = hasClerk ? await currentUser() : null;
+  const user = hasServerClerk ? await currentUser() : null;
   let registryToken = "Set Supabase env vars to fetch your token";
   let isPro = false;
 
@@ -62,11 +64,13 @@ export default async function AccountPage() {
   return (
     <>
       <SiteHeader />
-      <main>
+      <main className="bg-background">
         <section className="px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
-            <Badge variant="secondary">Account</Badge>
-            <h1 className="mt-4 text-3xl font-semibold tracking-normal sm:text-4xl">
+            <Badge variant="default" className="rounded-full text-accent">
+              Account
+            </Badge>
+            <h1 className="mt-4 text-4xl font-semibold tracking-normal sm:text-5xl">
               Registry access
             </h1>
             <p className="mt-3 text-base text-muted-foreground">
@@ -81,13 +85,13 @@ export default async function AccountPage() {
                       <KeyRound aria-hidden="true" className="size-5" />
                       Registry token
                     </CardTitle>
-                    <Badge variant={isPro ? "default" : "outline"}>
+                    <Badge variant={isPro ? "pro" : "outline"}>
                       {isPro ? "Pro active" : "Free"}
                     </Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="rounded-md border bg-muted/40 p-3 font-mono text-xs text-muted-foreground">
+                  <div className="overflow-x-auto rounded-xl bg-surface p-3 font-mono text-xs text-muted-foreground shadow-[var(--neo-inset-sm)]">
                     {registryToken}
                   </div>
                   <div className="mt-4">
@@ -106,7 +110,7 @@ export default async function AccountPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <pre className="overflow-x-auto rounded-md border bg-muted/40 p-4 text-xs text-muted-foreground">
+                  <pre className="overflow-x-auto rounded-xl bg-surface p-4 text-xs text-muted-foreground shadow-[var(--neo-inset-sm)]">
                     <code>{configSnippet}</code>
                   </pre>
                 </CardContent>

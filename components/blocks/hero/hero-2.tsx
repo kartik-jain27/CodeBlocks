@@ -30,7 +30,7 @@ export function HeroTwo({
     <section className="overflow-hidden px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.95fr_1.05fr]">
         <div>
-          <Badge variant="secondary" className="mb-5 rounded-full px-3 py-1">
+          <Badge variant="default" className="mb-5 rounded-full px-3 py-1 text-accent">
             <Sparkles aria-hidden="true" className="mr-1 size-3.5" />
             {eyebrow}
           </Badge>
@@ -53,25 +53,24 @@ export function HeroTwo({
             {["CLI install", "Dark mode", "Responsive", "Typed props"].map(
               (item) => (
                 <div key={item} className="flex items-center gap-2">
-                  <CheckCircle2 aria-hidden="true" className="size-4 text-foreground" />
+                  <CheckCircle2 aria-hidden="true" className="size-4 text-success" />
                   <span>{item}</span>
                 </div>
               ),
             )}
           </div>
         </div>
-        <Card className="relative overflow-hidden rounded-lg p-4 shadow-xl">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,hsl(var(--primary)/0.14),transparent_32%)]" />
-          <div className="relative rounded-md border bg-background p-4">
-            <div className="mb-4 flex items-center justify-between border-b pb-3">
+        <Card className="overflow-hidden p-4">
+          <div className="rounded-md border border-border-muted bg-background p-4">
+            <div className="mb-4 flex items-center justify-between border-b border-border-muted pb-3">
               <div>
                 <div className="h-3 w-28 rounded bg-foreground/90" />
-                <div className="mt-2 h-2 w-40 rounded bg-muted" />
+                <div className="mt-2 h-2 w-40 rounded bg-surface-hover" />
               </div>
               <Button size="sm">Publish</Button>
             </div>
             <div className="grid gap-3 sm:grid-cols-[0.7fr_1fr]">
-              <div className="rounded-md border bg-muted/40 p-3">
+              <div className="rounded-md border border-border-muted bg-surface p-3">
                 <div className="h-3 w-20 rounded bg-foreground/80" />
                 <div className="mt-4 space-y-2">
                   {previewRows.map((row) => (
@@ -80,18 +79,18 @@ export function HeroTwo({
                       className="flex items-center justify-between rounded-md bg-background px-3 py-2 text-xs text-muted-foreground"
                     >
                       <span>{row}</span>
-                      <span className="h-2 w-2 rounded-full bg-primary" />
+                      <span className="h-2 w-2 rounded-sm bg-primary" />
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="rounded-md border bg-background p-3">
+              <div className="rounded-md border border-border-muted bg-background p-3">
                 <div className="grid gap-2 sm:grid-cols-2">
                   {["Hero", "Pricing", "Auth", "Dashboard"].map((item) => (
-                    <div key={item} className="rounded-md border p-3">
+                    <div key={item} className="rounded-md border border-border-muted bg-surface p-3">
                       <div className="h-2 w-16 rounded bg-muted-foreground/40" />
-                      <div className="mt-8 h-16 rounded bg-muted" />
-                      <div className="mt-3 h-2 w-20 rounded bg-muted" />
+                      <div className="mt-8 h-16 rounded bg-surface-hover" />
+                      <div className="mt-3 h-2 w-20 rounded bg-surface-hover" />
                       <span className="sr-only">{item}</span>
                     </div>
                   ))}

@@ -1,5 +1,6 @@
-import { Blocks } from "lucide-react";
 import Link from "next/link";
+
+import { BrandMark } from "@/components/brand-mark";
 
 const footerLinks = [
   { href: "/blocks", label: "Blocks" },
@@ -10,13 +11,11 @@ const footerLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t">
+    <footer className="shadow-[var(--neo-inset-sm)]">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1fr_auto] lg:px-8">
         <div>
-          <Link href="/" className="flex items-center gap-2 font-semibold">
-            <span className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Blocks aria-hidden="true" className="size-4" />
-            </span>
+          <Link href="/" className="flex items-center gap-2 text-sm font-semibold">
+            <BrandMark />
             CodeBlocks
           </Link>
           <p className="mt-3 max-w-md text-sm text-muted-foreground">
@@ -30,6 +29,9 @@ export function SiteFooter() {
             </Link>
           ))}
         </div>
+      </div>
+      <div className="px-4 py-4 text-center text-xs text-muted-foreground shadow-[var(--neo-inset-sm)]">
+        CodeBlock, Built by Kartik
       </div>
     </footer>
   );

@@ -1,7 +1,9 @@
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
-import { Blocks, Menu } from "lucide-react";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 
+import { BrandMark } from "@/components/brand-mark";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
@@ -10,16 +12,18 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard" },
 ];
 
-export function SiteHeader() {
+interface SiteHeaderProps {
+  showThemeToggle?: boolean;
+}
+
+export function SiteHeader({ showThemeToggle = true }: SiteHeaderProps) {
   const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2 font-semibold">
-          <span className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Blocks aria-hidden="true" className="size-4" />
-          </span>
+    <header className="sticky top-0 z-40 bg-background/90 shadow-[var(--neo-flat)] backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-[68rem] items-center justify-between px-5 sm:px-8 lg:px-12 xl:px-16">
+        <Link href="/" className="flex items-center gap-2 text-sm font-semibold">
+          <BrandMark />
           CodeBlocks
         </Link>
         <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
@@ -33,34 +37,40 @@ export function SiteHeader() {
           {hasClerk ? (
             <>
               <SignedOut>
-                <SignInButton mode="modal">
-                  <Button variant="ghost">Sign in</Button>
-                </SignInButton>
-                <SignUpButton mode="modal">
-                  <Button>Get free blocks</Button>
-                </SignUpButton>
+                <Button asChild variant="ghost">
+                  <Link href="/sign-in">Sign in</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/sign-up">Get free blocks</Link>
+                </Button>
+                {showThemeToggle ? <ThemeToggle size="compact" /> : null}
               </SignedOut>
               <SignedIn>
                 <Button asChild variant="outline">
                   <Link href="/account">Account</Link>
                 </Button>
                 <UserButton />
+                {showThemeToggle ? <ThemeToggle size="compact" /> : null}
               </SignedIn>
             </>
           ) : (
             <>
               <Button asChild variant="ghost">
-                <Link href="/dashboard">Sign in</Link>
+                <Link href="/sign-in">Sign in</Link>
               </Button>
               <Button asChild>
-                <Link href="/blocks">Get free blocks</Link>
+                <Link href="/sign-up">Get free blocks</Link>
               </Button>
+              {showThemeToggle ? <ThemeToggle size="compact" /> : null}
             </>
           )}
         </div>
-        <Button variant="outline" size="icon" className="md:hidden" aria-label="Open menu">
-          <Menu aria-hidden="true" />
-        </Button>
+        <div className="flex items-center gap-2 md:hidden">
+          {showThemeToggle ? <ThemeToggle size="compact" /> : null}
+          <Button variant="outline" size="icon" aria-label="Open menu">
+            <Menu aria-hidden="true" />
+          </Button>
+        </div>
       </div>
     </header>
   );

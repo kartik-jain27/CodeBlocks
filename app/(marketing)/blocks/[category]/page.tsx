@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { BlockCard } from "@/components/marketing/block-card";
@@ -23,6 +24,24 @@ export function generateStaticParams() {
   }));
 }
 
+export async function generateMetadata({
+  params,
+}: CategoryPageProps): Promise<Metadata> {
+  const { category } = await params;
+  const config = getCategory(category);
+
+  if (!config) {
+    return {
+      title: "Blocks - CodeBlocks",
+    };
+  }
+
+  return {
+    title: `${config.label} blocks - CodeBlocks`,
+    description: config.description,
+  };
+}
+
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { category } = await params;
   const config = getCategory(category);
@@ -36,12 +55,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   return (
     <>
       <SiteHeader />
-      <main>
+      <main className="bg-background">
         <section className="px-4 py-20 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl">
-              <Badge variant="secondary">{config.label}</Badge>
-              <h1 className="mt-5 text-4xl font-semibold tracking-normal sm:text-5xl">
+              <Badge variant="default" className="rounded-full text-accent">
+                {config.label}
+              </Badge>
+              <h1 className="mt-5 text-5xl font-semibold tracking-normal sm:text-6xl">
                 {config.label} blocks
               </h1>
               <p className="mt-5 text-base leading-7 text-muted-foreground sm:text-lg">
