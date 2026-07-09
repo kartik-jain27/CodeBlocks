@@ -9,7 +9,7 @@ interface BlockVisualProps {
 
 export function BlockVisual({ block, blurred = false }: BlockVisualProps) {
   return (
-    <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-surface shadow-[var(--neo-inset-sm)]">
+    <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-border bg-surface shadow-[var(--neo-inset-sm)]">
       <div className={blurred ? "h-full blur-sm" : "h-full"}>
         {renderVisual(block)}
       </div>

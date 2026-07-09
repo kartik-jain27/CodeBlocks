@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { BlockPreviewRenderer } from "@/components/block-preview-renderer";
+import { PreviewThemeSync } from "@/app/preview/preview-theme-sync";
 import { blocksRegistry, getBlockRegistry } from "@/lib/blocks-registry";
 
 interface PreviewPageProps {
@@ -24,8 +25,10 @@ export default async function PreviewPage({ params }: PreviewPageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <BlockPreviewRenderer slug={block.name} />
-    </main>
+    <PreviewThemeSync>
+      <main className="min-h-screen bg-background text-foreground">
+        <BlockPreviewRenderer slug={block.name} />
+      </main>
+    </PreviewThemeSync>
   );
 }

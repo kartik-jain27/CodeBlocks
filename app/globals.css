@@ -227,6 +227,47 @@ body {
   text-shadow: var(--hero-heading-shadow);
 }
 
+.block-preview-scope {
+  --background: #ffffff;
+  --surface: #ffffff;
+  --surface-hover: #f4f4f5;
+  --foreground: #09090b;
+  --muted: #71717a;
+  --muted-foreground: #71717a;
+  --border: #e4e4e7;
+  --border-muted: #e4e4e7;
+  --accent: #18181b;
+  --accent-foreground: #fafafa;
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --card: #ffffff;
+  --card-foreground: #09090b;
+  --popover: #ffffff;
+  --popover-foreground: #09090b;
+  --success: #18181b;
+  --pro-gold: #18181b;
+  --neo-raised: none;
+  --neo-raised-sm: none;
+  --neo-raised-lg: none;
+  --neo-inset: none;
+  --neo-inset-sm: none;
+  --neo-flat: none;
+}
+
+.block-preview-scope :is(button, input, [role="button"]) {
+  box-shadow: none;
+}
+
+.block-preview-scope :is(button, input) {
+  border-width: 1px;
+}
+
+.block-preview-scope :is([class*="shadow-"]) {
+  box-shadow: none;
+}
+
 ::selection {
   background: var(--accent);
   color: var(--accent-foreground);

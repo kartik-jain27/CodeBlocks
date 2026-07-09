@@ -7,11 +7,11 @@ import path from "path";
 
 import { BlockDetailTabs } from "@/components/block-detail-tabs";
 import { CopyableCommand } from "@/components/copyable-command";
+import { FavoriteButton } from "@/components/favorite-button";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { Badge } from "@/components/ui/badge";
 import {
-  blocksRegistry,
   getBlockRegistry,
   getCategory,
   getInstallCommand,
@@ -25,12 +25,7 @@ interface BlockDetailPageProps {
   }>;
 }
 
-export function generateStaticParams() {
-  return blocksRegistry.map((block) => ({
-    category: block.category,
-    slug: block.name,
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -67,22 +62,12 @@ async function getBlockSource(filePath?: string) {
   }
 }
 
-async function getUserIsPro() {
-  const hasServerClerk = Boolean(
-    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY,
-  );
-
-  if (!hasServerClerk) {
+async function getUserIsPro(userId: string | null) {
+  if (!userId) {
     return false;
   }
 
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return false;
-    }
-
     const supabase = createClient();
     const { data } = await supabase
       .from("users")
@@ -91,6 +76,36 @@ async function getUserIsPro() {
       .single();
 
     return Boolean(data?.is_pro);
+  } catch {
+    return false;
+  }
+}
+
+async function getInitialFavorited(userId: string | null, blockName: string) {
+  if (!userId) {
+    return false;
+  }
+
+  try {
+    const supabase = createClient();
+    const { data: user } = await supabase
+      .from("users")
+      .select("id")
+      .eq("clerk_id", userId)
+      .maybeSingle();
+
+    if (!user?.id) {
+      return false;
+    }
+
+    const { data: favorite } = await supabase
+      .from("favorites")
+      .select("block_name")
+      .eq("user_id", user.id)
+      .eq("block_name", blockName)
+      .maybeSingle();
+
+    return Boolean(favorite);
   } catch {
     return false;
   }
@@ -105,12 +120,23 @@ export default async function BlockDetailPage({ params }: BlockDetailPageProps) 
     notFound();
   }
 
-  const [sourceCode, userIsPro] = await Promise.all([
+  const hasServerClerk = Boolean(
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY,
+  );
+  const session = hasServerClerk ? await auth() : null;
+  const userId = session?.userId ?? null;
+  const [sourceCode, userIsPro, initialFavorited] = await Promise.all([
     getBlockSource(block.files[0]?.path),
-    getUserIsPro(),
+    getUserIsPro(userId),
+    getInitialFavorited(userId, block.name),
   ]);
   const isLocked = block.isPro && !userIsPro;
   const installCommand = getInstallCommand(block);
+  const installPrompt = `Install the ${block.title} block into this project.
+Steps:
+1. Ensure this is a Next.js + shadcn project with components.json
+2. Run: npx shadcn@latest add https://codeblocks.dev/r/${block.name}
+After install, summarize what was added and any next steps.`;
 
   return (
     <>
@@ -147,6 +173,11 @@ export default async function BlockDetailPage({ params }: BlockDetailPageProps) 
                   {block.description}
                 </p>
               </div>
+              <FavoriteButton
+                blockName={block.name}
+                initialFavorited={initialFavorited}
+                isSignedIn={Boolean(userId)}
+              />
             </div>
 
             <BlockDetailTabs
@@ -160,7 +191,10 @@ export default async function BlockDetailPage({ params }: BlockDetailPageProps) 
               <p className="mb-2 text-sm font-medium text-foreground">
                 Installation
               </p>
-              <CopyableCommand command={installCommand} />
+              <div className="grid gap-3">
+                <CopyableCommand command={installCommand} />
+                <CopyableCommand command={installPrompt} label="Copy Prompt" />
+              </div>
             </div>
           </div>
         </section>

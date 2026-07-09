@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getBlockRegistry } from "@/lib/blocks-registry";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase";
 
 interface ProRegistryRouteContext {
@@ -15,6 +16,18 @@ export async function GET(request: Request, context: ProRegistryRouteContext) {
 
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { allowed, retryAfterSeconds } = checkRateLimit(`pro:${token}`, 120);
+
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      {
+        status: 429,
+        headers: { "Retry-After": String(retryAfterSeconds) },
+      },
+    );
   }
 
   const block = getBlockRegistry(name);

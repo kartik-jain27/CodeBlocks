@@ -1,8 +1,7 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { KeyRound, Terminal } from "lucide-react";
 import { redirect } from "next/navigation";
 
-import { CopyCommandButton } from "@/components/marketing/copy-command-button";
+import { AccountRegistryToken } from "@/components/account-registry-token";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { Badge } from "@/components/ui/badge";
@@ -50,16 +49,6 @@ export default async function AccountPage() {
   }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-  const configSnippet = `{
-  "registries": {
-    "codeblocks": {
-      "url": "${appUrl}/api/r/pro/{name}",
-      "headers": {
-        "Authorization": "Bearer ${registryToken}"
-      }
-    }
-  }
-}`;
 
   return (
     <>
@@ -77,44 +66,30 @@ export default async function AccountPage() {
               {user?.primaryEmailAddress?.emailAddress ??
                 "Connect Clerk to sync your account email."}
             </p>
-            <div className="mt-8 grid gap-4">
+            <div className="mt-8">
               <Card>
                 <CardHeader>
                   <div className="flex items-center justify-between gap-4">
-                    <CardTitle className="flex items-center gap-2 text-xl">
-                      <KeyRound aria-hidden="true" className="size-5" />
-                      Registry token
-                    </CardTitle>
+                    <CardTitle>Plan status</CardTitle>
                     <Badge variant={isPro ? "pro" : "outline"}>
                       {isPro ? "Pro active" : "Free"}
                     </Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="overflow-x-auto rounded-xl bg-surface p-3 font-mono text-xs text-muted-foreground shadow-[var(--neo-inset-sm)]">
-                    {registryToken}
-                  </div>
-                  <div className="mt-4">
-                    <CopyCommandButton
-                      command={registryToken}
-                      label="Copy registry token"
-                    />
-                  </div>
+                  <p className="text-sm leading-6 text-muted-foreground">
+                    {isPro
+                      ? "Your Pro registry access is active."
+                      : "Upgrade to Pro to use private registry installs."}
+                  </p>
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-xl">
-                    <Terminal aria-hidden="true" className="size-5" />
-                    components.json
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <pre className="overflow-x-auto rounded-xl bg-surface p-4 text-xs text-muted-foreground shadow-[var(--neo-inset-sm)]">
-                    <code>{configSnippet}</code>
-                  </pre>
-                </CardContent>
-              </Card>
+              <div className="mt-4">
+                <AccountRegistryToken
+                  appUrl={appUrl}
+                  initialRegistryToken={registryToken}
+                />
+              </div>
             </div>
           </div>
         </section>

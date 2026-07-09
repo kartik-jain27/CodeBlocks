@@ -9,6 +9,7 @@ interface PolarWebhookEvent {
     customer?: {
       id?: string;
       email?: string;
+      externalId?: string | null;
     };
     customerEmail?: string;
     customer_email?: string;
@@ -41,25 +42,33 @@ export async function POST(request: Request) {
   }
 
   if (event.type === "order.created") {
+    const externalId = event.data.customer?.externalId;
     const customerEmail =
       event.data.customer?.email ??
       event.data.customerEmail ??
       event.data.customer_email;
 
-    if (!customerEmail) {
+    if (!externalId && !customerEmail) {
       return NextResponse.json({ received: true, updated: false });
     }
 
     try {
       const supabase = createClient();
-      await supabase
+      let query = supabase
         .from("users")
         .update({
           is_pro: true,
           pro_purchased_at: new Date().toISOString(),
           polar_customer_id: event.data.customer?.id,
-        })
-        .eq("email", customerEmail);
+        });
+
+      if (externalId) {
+        query = query.eq("clerk_id", externalId);
+      } else {
+        query = query.eq("email", customerEmail);
+      }
+
+      await query;
     } catch {
       return NextResponse.json(
         { error: "Supabase is not configured" },

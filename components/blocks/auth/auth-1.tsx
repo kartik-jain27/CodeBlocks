@@ -23,7 +23,7 @@ export function AuthOne({
 }: AuthOneProps) {
   return (
     <section className="flex min-h-[560px] items-center justify-center px-4 py-16">
-      <Card className="w-full max-w-md border-border">
+      <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>

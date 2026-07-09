@@ -17,9 +17,9 @@ export function CtaOne({
 }: CtaOneProps) {
   return (
     <section className="px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto grid max-w-6xl gap-8 rounded-lg border border-border-muted bg-surface p-6 sm:p-8 lg:grid-cols-[0.9fr_1fr] lg:p-10">
+      <div className="mx-auto grid max-w-6xl gap-8 rounded-lg border bg-muted/40 p-6 sm:p-8 lg:grid-cols-[0.9fr_1fr] lg:p-10">
         <div>
-          <Badge variant="pro" className="rounded-full">
+          <Badge variant="outline" className="rounded-full">
             {badge}
           </Badge>
           <h2 className="mt-5 max-w-2xl text-3xl font-semibold tracking-normal sm:text-4xl">

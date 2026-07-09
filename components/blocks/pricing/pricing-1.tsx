@@ -62,7 +62,7 @@ export function PricingOne({
             {headline}
           </h2>
           <p className="mt-4 text-base text-muted-foreground">{subheadline}</p>
-          <div className="mt-8 inline-flex rounded-lg border border-border-muted bg-surface p-1">
+          <div className="mt-8 inline-flex rounded-lg border bg-muted p-1">
             {(["monthly", "annual"] as const).map((value) => (
               <button
                 key={value}
@@ -70,7 +70,7 @@ export function PricingOne({
                 onClick={() => setBilling(value)}
                 className={`rounded-md px-4 py-2 text-sm font-medium capitalize transition ${
                   billing === value
-                    ? "bg-surface-hover text-foreground"
+                    ? "bg-background text-foreground shadow-sm"
                     : "text-muted-foreground"
                 }`}
               >
@@ -86,17 +86,17 @@ export function PricingOne({
             return (
               <Card
                 key={plan.name}
-                className={plan.featured ? "border-accent bg-surface-hover/50" : undefined}
+                className={plan.featured ? "border-primary shadow-lg" : undefined}
               >
                 <CardHeader>
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                      <span className="flex size-10 items-center justify-center rounded-md border border-border-muted bg-background">
+                      <span className="flex size-10 items-center justify-center rounded-md bg-muted">
                         <Icon aria-hidden="true" className="size-5" />
                       </span>
                       <CardTitle className="text-xl">{plan.name}</CardTitle>
                     </div>
-                    {plan.featured ? <Badge variant="pro">Best value</Badge> : null}
+                    {plan.featured ? <Badge>Best value</Badge> : null}
                   </div>
                   <CardDescription>{plan.description}</CardDescription>
                 </CardHeader>
