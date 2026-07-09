@@ -1,8 +1,8 @@
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { Menu } from "lucide-react";
 import Link from "next/link";
 
 import { BrandMark } from "@/components/brand-mark";
+import { MobileNav } from "@/components/marketing/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 
@@ -65,12 +65,7 @@ export function SiteHeader({ showThemeToggle = true }: SiteHeaderProps) {
             </>
           )}
         </div>
-        <div className="flex items-center gap-2 md:hidden">
-          {showThemeToggle ? <ThemeToggle size="compact" /> : null}
-          <Button variant="outline" size="icon" aria-label="Open menu">
-            <Menu aria-hidden="true" />
-          </Button>
-        </div>
+        <MobileNav showThemeToggle={showThemeToggle} />
       </div>
     </header>
   );

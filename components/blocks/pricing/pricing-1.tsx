@@ -25,7 +25,7 @@ const plans = [
     annual: "$0",
     description: "Free blocks for side projects and prototypes.",
     icon: Users,
-    features: ["40 free blocks roadmap", "CLI installs", "Community updates"],
+    features: ["Core components", "Responsive sections", "Community updates"],
     featured: false,
   },
   {
@@ -34,7 +34,7 @@ const plans = [
     annual: "$97",
     description: "Lifetime access for builders shipping commercial SaaS.",
     icon: Crown,
-    features: ["200+ blocks roadmap", "Lifetime updates", "Commercial license"],
+    features: ["Advanced sections", "Lifetime updates", "Commercial license"],
     featured: true,
   },
   {
@@ -43,7 +43,7 @@ const plans = [
     annual: "$297",
     description: "A shared license for small product teams.",
     icon: Users,
-    features: ["5 seats", "Pro registry token", "Priority block requests"],
+    features: ["Shared workspace", "Reusable patterns", "Priority support"],
     featured: false,
   },
 ];

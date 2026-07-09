@@ -12,11 +12,11 @@ interface HeroOneProps {
 }
 
 export function HeroOne({
-  badge = "New in CodeBlocks",
-  headline = "Production-ready shadcn blocks. One-time payment.",
-  subheadline = "Browse polished SaaS sections, install them with the shadcn CLI, and ship the product screens your customers actually touch.",
-  primaryCta = "Browse blocks",
-  secondaryCta = "View pricing",
+  badge = "New launch",
+  headline = "Launch the screens your SaaS needs first.",
+  subheadline = "A focused hero section with clear positioning, polished actions, and responsive spacing ready for your next product page.",
+  primaryCta = "Start building",
+  secondaryCta = "View demo",
 }: HeroOneProps) {
   return (
     <section className="relative flex min-h-[600px] flex-col items-center justify-center overflow-hidden px-4 py-24 text-center">

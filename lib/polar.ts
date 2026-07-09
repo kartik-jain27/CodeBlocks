@@ -7,10 +7,10 @@ export const pricingTiers = [
     href: "/blocks",
     featured: false,
     features: [
-      "40 free blocks roadmap",
-      "CLI install endpoints",
+      "5 free blocks",
+      "Public CLI install endpoints",
       "Commercial use for free blocks",
-      "GitHub source access",
+      "Preview and copy source",
     ],
   },
   {
@@ -21,8 +21,8 @@ export const pricingTiers = [
     href: getPolarCheckoutUrl(process.env.NEXT_PUBLIC_POLAR_PRO_PRODUCT_ID),
     featured: true,
     features: [
-      "200+ blocks roadmap",
-      "Lifetime updates",
+      "3 pro blocks today",
+      "Future pro blocks included",
       "Commercial license",
       "Registry token for pro installs",
     ],
@@ -37,7 +37,7 @@ export const pricingTiers = [
     features: [
       "Everything in Pro",
       "5 seats",
-      "Team workspace roadmap",
+      "Shared commercial license",
       "Priority block requests",
     ],
   },

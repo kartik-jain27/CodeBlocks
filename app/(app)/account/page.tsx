@@ -6,17 +6,16 @@ import { SiteFooter } from "@/components/marketing/site-footer";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { hasServerClerk } from "@/lib/clerk";
 import { createClient } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
 export default async function AccountPage() {
-  const hasServerClerk = Boolean(
-    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY,
-  );
+  const clerkConfigured = hasServerClerk();
   let userId: string | null = null;
 
-  if (hasServerClerk) {
+  if (clerkConfigured) {
     const session = await auth();
     userId = session.userId;
 
@@ -25,7 +24,7 @@ export default async function AccountPage() {
     }
   }
 
-  const user = hasServerClerk ? await currentUser() : null;
+  const user = clerkConfigured ? await currentUser() : null;
   let registryToken = "Set Supabase env vars to fetch your token";
   let isPro = false;
 

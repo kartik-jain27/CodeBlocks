@@ -22,7 +22,7 @@ const previewRows = [
 export function HeroTwo({
   eyebrow = "SaaS blocks for shadcn/ui",
   headline = "Launch the screens every SaaS needs first.",
-  subheadline = "CodeBlocks gives you polished sections for onboarding, pricing, auth, dashboards, and app shells without starting from a blank file.",
+  subheadline = "Ship onboarding, pricing, auth, dashboards, and app shells without starting from a blank file.",
   primaryCta = "Start building",
   secondaryCta = "Explore library",
 }: HeroTwoProps) {

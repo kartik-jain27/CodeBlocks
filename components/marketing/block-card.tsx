@@ -61,7 +61,7 @@ export function BlockCard({ block }: BlockCardProps) {
           )}
           <CopyCommandButton command={command} />
           <Button asChild variant="ghost" size="sm">
-            <Link href={`/api/r/${block.isPro ? `pro/${block.name}` : block.name}`}>
+            <Link href={`/r/${block.isPro ? `pro/${block.name}` : block.name}`}>
               JSON
             </Link>
           </Button>

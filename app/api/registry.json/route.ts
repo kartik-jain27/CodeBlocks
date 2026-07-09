@@ -11,7 +11,7 @@ export async function GET() {
     homepage: appUrl,
     items: blocksRegistry.map((block) => ({
       ...block,
-      registryUrl: `${appUrl}${block.isPro ? "/api/r/pro" : "/api/r"}/${block.name}`,
+      registryUrl: `${appUrl}${block.isPro ? "/r/pro" : "/r"}/${block.name}`,
     })),
   });
 }

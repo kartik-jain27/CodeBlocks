@@ -29,7 +29,7 @@ const features: FeatureItem[] = [
   },
   {
     title: "CLI-ready",
-    description: "Every item ships through a shadcn-compatible registry.",
+    description: "Install the section and tune it to your product quickly.",
     icon: Braces,
   },
   {
@@ -43,8 +43,8 @@ const features: FeatureItem[] = [
     icon: Moon,
   },
   {
-    title: "Pro gated",
-    description: "Use registry tokens for paid blocks and lifetime access.",
+    title: "Access control",
+    description: "Keep paid, admin, and team-only areas clearly separated.",
     icon: LockKeyhole,
   },
   {
@@ -56,7 +56,7 @@ const features: FeatureItem[] = [
 
 export function FeaturesOne({
   headline = "Everything a SaaS interface needs.",
-  subheadline = "CodeBlocks focuses on the product screens that usually slow teams down after the landing page is done.",
+  subheadline = "Cover the product screens that usually slow teams down after the landing page is done.",
 }: FeaturesOneProps) {
   return (
     <section className="px-4 py-20 sm:px-6 lg:px-8">

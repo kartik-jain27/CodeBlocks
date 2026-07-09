@@ -50,7 +50,7 @@ const activity = [
   ["Acme Labs", "Upgraded to Pro", "$97"],
   ["Northstar", "Started trial", "$0"],
   ["Tupleworks", "Bought Team", "$297"],
-  ["LunarDesk", "Installed hero-2", "$0"],
+  ["LunarDesk", "Published landing page", "$0"],
 ];
 
 export function DashboardOne({

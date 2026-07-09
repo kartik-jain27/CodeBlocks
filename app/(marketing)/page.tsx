@@ -6,8 +6,11 @@ import { SiteFooter } from "@/components/marketing/site-footer";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
+import { blocksRegistry } from "@/lib/blocks-registry";
 
 export default function LandingPage() {
+  const freeBlockCount = blocksRegistry.filter((block) => !block.isPro).length;
+
   return (
     <>
       <SiteHeader showThemeToggle={false} />
@@ -54,7 +57,7 @@ export default function LandingPage() {
               </div>
 
               <div className="mt-7 flex max-w-full flex-wrap items-center justify-center gap-x-3 gap-y-3 text-[11px] text-muted-foreground sm:gap-x-6 sm:text-xs">
-                <span>40+ free blocks</span>
+                <span>{freeBlockCount} free blocks</span>
                 <span className="h-1 w-1 rounded-full bg-muted-foreground/40 shadow-[var(--neo-flat)]" />
                 <span>Next.js 15 ready</span>
                 <span className="h-1 w-1 rounded-full bg-muted-foreground/40 shadow-[var(--neo-flat)]" />

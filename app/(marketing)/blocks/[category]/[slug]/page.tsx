@@ -8,6 +8,7 @@ import path from "path";
 import { BlockDetailTabs } from "@/components/block-detail-tabs";
 import { CopyableCommand } from "@/components/copyable-command";
 import { FavoriteButton } from "@/components/favorite-button";
+import { CopyCommandButton } from "@/components/marketing/copy-command-button";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +17,7 @@ import {
   getCategory,
   getInstallCommand,
 } from "@/lib/blocks-registry";
+import { hasServerClerk } from "@/lib/clerk";
 import { createClient } from "@/lib/supabase";
 
 interface BlockDetailPageProps {
@@ -120,10 +122,7 @@ export default async function BlockDetailPage({ params }: BlockDetailPageProps) 
     notFound();
   }
 
-  const hasServerClerk = Boolean(
-    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY,
-  );
-  const session = hasServerClerk ? await auth() : null;
+  const session = hasServerClerk() ? await auth() : null;
   const userId = session?.userId ?? null;
   const [sourceCode, userIsPro, initialFavorited] = await Promise.all([
     getBlockSource(block.files[0]?.path),
@@ -193,7 +192,13 @@ After install, summarize what was added and any next steps.`;
               </p>
               <div className="grid gap-3">
                 <CopyableCommand command={installCommand} />
-                <CopyableCommand command={installPrompt} label="Copy Prompt" />
+                <div className="flex flex-wrap gap-2">
+                  <CopyCommandButton
+                    command={installPrompt}
+                    label="Copy Prompt"
+                    icon="sparkles"
+                  />
+                </div>
               </div>
             </div>
           </div>

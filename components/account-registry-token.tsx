@@ -21,7 +21,7 @@ export function AccountRegistryToken({
     () => `{
   "registries": {
     "codeblocks": {
-      "url": "${appUrl}/api/r/pro/{name}",
+      "url": "${appUrl}/r/pro/{name}",
       "headers": {
         "Authorization": "Bearer ${registryToken}"
       }

@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuth } from "@clerk/nextjs";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -12,17 +11,11 @@ interface PricingButtonProps {
 }
 
 export function PricingButton({ productId, label, featured }: PricingButtonProps) {
-  const { isSignedIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function handleCheckout() {
     if (!productId) {
-      return;
-    }
-
-    if (!isSignedIn) {
-      window.location.href = "/sign-in?redirect_url=/pricing";
       return;
     }
 
@@ -38,6 +31,11 @@ export function PricingButton({ productId, label, featured }: PricingButtonProps
         body: JSON.stringify({ productId }),
       });
       const data = (await response.json()) as { url?: string; error?: string };
+
+      if (response.status === 401) {
+        window.location.href = "/sign-in?redirect_url=/pricing";
+        return;
+      }
 
       if (!response.ok || !data.url) {
         throw new Error(data.error ?? "Checkout could not be created");

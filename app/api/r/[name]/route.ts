@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getBlockRegistry } from "@/lib/blocks-registry";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { createRegistryItemResponse } from "@/lib/registry-item";
 
 interface RegistryRouteContext {
   params: Promise<{
@@ -35,5 +36,5 @@ export async function GET(request: Request, context: RegistryRouteContext) {
     return NextResponse.json({ error: "Pro block" }, { status: 403 });
   }
 
-  return NextResponse.json(block);
+  return NextResponse.json(await createRegistryItemResponse(block));
 }

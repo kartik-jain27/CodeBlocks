@@ -15,6 +15,7 @@ import {
   getInstallCommand,
   type BlockRegistryItem,
 } from "@/lib/blocks-registry";
+import { hasServerClerk } from "@/lib/clerk";
 import { createClient } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -76,12 +77,10 @@ async function getDashboardData(userId: string | null) {
 }
 
 export default async function DashboardPage() {
-  const hasServerClerk = Boolean(
-    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY,
-  );
+  const clerkConfigured = hasServerClerk();
   let userId: string | null = null;
 
-  if (hasServerClerk) {
+  if (clerkConfigured) {
     const session = await auth();
     userId = session.userId;
 
@@ -90,7 +89,7 @@ export default async function DashboardPage() {
     }
   }
 
-  const user = hasServerClerk ? await currentUser() : null;
+  const user = clerkConfigured ? await currentUser() : null;
   const { userAccess, savedBlocks, statusMessage } = await getDashboardData(userId);
   const isPro = Boolean(userAccess?.is_pro);
   const registryToken = userAccess?.registry_token;
@@ -119,7 +118,7 @@ export default async function DashboardPage() {
               </div>
             ) : null}
 
-            {!hasServerClerk ? (
+            {!clerkConfigured ? (
               <Card className="mt-6">
                 <CardHeader>
                   <CardTitle>Account access is not configured</CardTitle>

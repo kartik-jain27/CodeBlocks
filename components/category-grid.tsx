@@ -1,10 +1,11 @@
-// components/category-grid.tsx
-// Replace your entire category grid section with this file
-// Then import and use <CategoryGrid /> in your homepage
-
 import Link from "next/link";
+import type { ReactNode } from "react";
 
-// ─── Wireframe Mockups ───────────────────────────────────────────────────────
+import {
+  blockCategories,
+  getBlocksByCategory,
+  type BlockCategory,
+} from "@/lib/blocks-registry";
 
 function HeroMockup() {
   return (
@@ -130,48 +131,6 @@ function AppShellMockup() {
   );
 }
 
-function HeaderMockup() {
-  return (
-    <div className="flex h-full w-full flex-col p-3">
-      {/* Navbar strip */}
-      <div className="flex items-center justify-between rounded-md bg-[var(--mockup-panel-strong)] border border-[var(--mockup-line-soft)] px-2 py-1.5">
-        <div className="h-2 w-10 rounded-full bg-[var(--mockup-line)]" />
-        <div className="hidden sm:flex items-center gap-1.5">
-          <div className="h-1.5 w-6 rounded-full bg-[var(--mockup-line-muted)]" />
-          <div className="h-1.5 w-6 rounded-full bg-[var(--mockup-line-muted)]" />
-          <div className="h-1.5 w-6 rounded-full bg-[var(--mockup-line-muted)]" />
-        </div>
-        <div className="h-4 w-12 rounded-md bg-[var(--mockup-line)]" />
-      </div>
-      {/* Page content hint */}
-      <div className="mt-2 flex flex-1 flex-col items-center justify-center gap-1.5">
-        <div className="h-2 w-20 rounded-full bg-[var(--mockup-panel-strong)]" />
-        <div className="h-1.5 w-28 rounded-full bg-[var(--mockup-panel-strong)]" />
-      </div>
-    </div>
-  );
-}
-
-function FooterMockup() {
-  return (
-    <div className="flex h-full w-full flex-col justify-end p-3">
-      <div className="flex flex-col gap-1.5">
-        <div className="h-px w-full bg-[var(--mockup-panel-strong)]" />
-        <div className="grid grid-cols-4 gap-1.5 pt-1">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="flex flex-col gap-1">
-              <div className="h-1.5 w-full rounded-full bg-[var(--mockup-line)]" />
-              <div className="h-1 w-3/4 rounded-full bg-[var(--mockup-panel-strong)]" />
-              <div className="h-1 w-3/4 rounded-full bg-[var(--mockup-panel-strong)]" />
-              <div className="h-1 w-1/2 rounded-full bg-[var(--mockup-panel-strong)]" />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function CtaMockup() {
   return (
     <div className="flex h-full w-full items-center justify-center p-3">
@@ -187,75 +146,32 @@ function CtaMockup() {
   );
 }
 
-// ─── Category Data ────────────────────────────────────────────────────────────
+const mockups: Record<BlockCategory, ReactNode> = {
+  hero: <HeroMockup />,
+  features: <FeaturesMockup />,
+  pricing: <PricingMockup />,
+  auth: <AuthMockup />,
+  dashboard: <DashboardMockup />,
+  "app-shell": <AppShellMockup />,
+  cta: <CtaMockup />,
+};
 
-const categories = [
-  {
-    slug: "hero",
-    name: "Hero Sections",
-    count: 9,
-    free: 3,
-    mockup: <HeroMockup />,
-  },
-  {
-    slug: "features",
-    name: "Features",
-    count: 10,
-    free: 0,
-    mockup: <FeaturesMockup />,
-  },
-  {
-    slug: "pricing",
-    name: "Pricing",
-    count: 8,
-    free: 1,
-    mockup: <PricingMockup />,
-  },
-  {
-    slug: "auth",
-    name: "Auth",
-    count: 14,
-    free: 0,
-    mockup: <AuthMockup />,
-  },
-  {
-    slug: "dashboard",
-    name: "Dashboard",
-    count: 10,
-    free: 0,
-    mockup: <DashboardMockup />,
-  },
-  {
-    slug: "app-shell",
-    name: "App Shell",
-    count: 10,
-    free: 0,
-    mockup: <AppShellMockup />,
-  },
-  {
-    slug: "header",
-    name: "Header",
-    count: 14,
-    free: 0,
-    mockup: <HeaderMockup />,
-  },
-  {
-    slug: "footer",
-    name: "Footer",
-    count: 14,
-    free: 0,
-    mockup: <FooterMockup />,
-  },
-  {
-    slug: "cta",
-    name: "Call to Action",
-    count: 20,
-    free: 0,
-    mockup: <CtaMockup />,
-  },
-];
+const categoryNames: Partial<Record<BlockCategory, string>> = {
+  hero: "Hero Sections",
+  cta: "Call to Action",
+};
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+const categories = blockCategories.map((category) => {
+  const blocks = getBlocksByCategory(category.slug);
+
+  return {
+    slug: category.slug,
+    name: categoryNames[category.slug] ?? category.label,
+    count: blocks.length,
+    free: blocks.filter((block) => !block.isPro).length,
+    mockup: mockups[category.slug],
+  };
+});
 
 export function CategoryGrid() {
   return (
@@ -281,12 +197,10 @@ export function CategoryGrid() {
             href={`/blocks/${cat.slug}`}
             className="group relative overflow-hidden rounded-2xl bg-[var(--category-card)] shadow-[var(--category-shadow)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--category-shadow-hover)]"
           >
-            {/* Mockup area — top portion of card */}
             <div className="relative h-32 w-full overflow-hidden bg-[var(--category-preview)]">
               {cat.mockup}
             </div>
 
-            {/* Text — bottom of card */}
             <div className="px-4 py-2.5 shadow-[var(--neo-inset-sm)]">
               <p className="text-sm font-semibold text-foreground group-hover:text-accent transition-colors">
                 {cat.name}

@@ -23,7 +23,7 @@ const navItems = [
   { label: "Settings", icon: Settings, active: false },
 ];
 
-export function AppShellOne({ workspaceName = "CodeBlocks" }: AppShellOneProps) {
+export function AppShellOne({ workspaceName = "Northstar" }: AppShellOneProps) {
   return (
     <section className="px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl overflow-hidden rounded-lg border bg-background shadow-sm">
@@ -63,7 +63,7 @@ export function AppShellOne({ workspaceName = "CodeBlocks" }: AppShellOneProps) 
             <header className="flex flex-col gap-3 border-b p-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-xl font-semibold tracking-normal">Dashboard</h2>
-                <p className="text-sm text-muted-foreground">Good morning, Kartik.</p>
+                <p className="text-sm text-muted-foreground">Good morning, Alex.</p>
               </div>
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="icon" aria-label="Search">
@@ -91,7 +91,7 @@ export function AppShellOne({ workspaceName = "CodeBlocks" }: AppShellOneProps) 
               <div className="rounded-lg border p-4">
                 <div className="h-4 w-32 rounded bg-foreground/80" />
                 <div className="mt-6 grid gap-3">
-                  {["hero-2", "pricing-1", "dashboard-1", "app-shell-1"].map(
+                  {["Onboarding", "Billing", "Usage reports", "Team settings"].map(
                     (block) => (
                       <div
                         key={block}

@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 import { getBlockRegistry } from "@/lib/blocks-registry";
+import { hasServerClerk } from "@/lib/clerk";
 import { createClient } from "@/lib/supabase";
 
 async function parseBlockName(request: Request) {
@@ -14,6 +15,12 @@ async function parseBlockName(request: Request) {
 }
 
 async function getFavoriteContext(request: Request) {
+  if (!hasServerClerk()) {
+    return {
+      response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
+    };
+  }
+
   const { userId } = await auth();
 
   if (!userId) {

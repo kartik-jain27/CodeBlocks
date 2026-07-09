@@ -52,13 +52,13 @@ Run the SQL in `supabase/schema.sql` in your Supabase project. The `users` table
 Free block endpoint:
 
 ```bash
-npx shadcn@latest add http://localhost:3000/api/r/hero-1
+npx shadcn@latest add http://localhost:3000/r/hero-1
 ```
 
 Pro block endpoint:
 
 ```bash
-npx shadcn@latest add http://localhost:3000/api/r/pro/dashboard-1
+npx shadcn@latest add http://localhost:3000/r/pro/dashboard-1
 ```
 
 Pro requests must include:
@@ -67,7 +67,7 @@ Pro requests must include:
 Authorization: Bearer <registry_token>
 ```
 
-The registry index is available at `/api/registry.json`, and static registry item files are in `registry/`.
+The registry index is available at `/api/registry.json`. Registry item responses are generated from the component source files, so the CLI receives the current code with each install.
 
 ## Included V1 Blocks
 
@@ -94,4 +94,4 @@ Polar order unlock:
 /api/webhooks/polar
 ```
 
-Configure Polar to send `order.created` events. The webhook marks the matching Supabase user as pro by email.
+Configure Polar to send `order.created` events. The webhook unlocks Pro only when the purchased product ID matches one of the configured Polar product IDs, then updates the matching Supabase user by Clerk external ID or email.

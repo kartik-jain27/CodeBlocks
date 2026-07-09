@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getBlockRegistry } from "@/lib/blocks-registry";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { createRegistryItemResponse } from "@/lib/registry-item";
 import { createClient } from "@/lib/supabase";
 
 interface ProRegistryRouteContext {
@@ -48,7 +49,7 @@ export async function GET(request: Request, context: ProRegistryRouteContext) {
       return NextResponse.json({ error: "Pro required" }, { status: 403 });
     }
 
-    return NextResponse.json(block);
+    return NextResponse.json(await createRegistryItemResponse(block));
   } catch {
     return NextResponse.json(
       { error: "Supabase is not configured" },

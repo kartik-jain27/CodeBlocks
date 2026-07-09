@@ -2,9 +2,14 @@ import { auth } from "@clerk/nextjs/server";
 import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
 
+import { hasServerClerk } from "@/lib/clerk";
 import { createClient } from "@/lib/supabase";
 
 export async function POST() {
+  if (!hasServerClerk()) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { userId } = await auth();
 
   if (!userId) {

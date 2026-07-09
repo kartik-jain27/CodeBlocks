@@ -31,16 +31,20 @@ export async function POST(request: NextRequest) {
     if (primaryEmail) {
       try {
         const supabase = createClient();
-        await supabase.from("users").upsert(
+        const { error } = await supabase.from("users").upsert(
           {
             clerk_id: user.id,
             email: primaryEmail,
           },
           { onConflict: "clerk_id" },
         );
+
+        if (error) {
+          throw error;
+        }
       } catch {
         return NextResponse.json(
-          { error: "Supabase is not configured" },
+          { error: "User sync failed" },
           { status: 500 },
         );
       }
