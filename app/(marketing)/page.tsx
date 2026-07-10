@@ -73,10 +73,8 @@ export default function LandingPage() {
           <CategoryGrid />
           
         </main>
-        <div className="overflow-hidden rounded-[2rem] bg-surface shadow-[var(--neo-raised-lg)]">
-          <SiteFooter />
-        </div>
       </PageContainer>
+      <SiteFooter />
     </>
   );
 }

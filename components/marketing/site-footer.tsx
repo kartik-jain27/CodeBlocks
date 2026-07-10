@@ -11,8 +11,8 @@ const footerLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="shadow-[var(--neo-inset-sm)]">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1fr_auto] lg:px-8">
+    <footer className="w-full bg-background/90 shadow-[var(--neo-flat)] backdrop-blur-xl">
+      <div className="mx-auto grid max-w-[68rem] gap-8 px-5 py-10 sm:px-8 md:grid-cols-[1fr_auto] lg:px-12 xl:px-16">
         <div>
           <Link href="/" className="flex items-center gap-2 text-sm font-semibold">
             <BrandMark />
@@ -30,8 +30,10 @@ export function SiteFooter() {
           ))}
         </div>
       </div>
-      <div className="px-4 py-4 text-center text-xs text-muted-foreground shadow-[var(--neo-inset-sm)]">
-        CodeBlock, Built by Kartik
+      <div className="shadow-[var(--neo-inset-sm)]">
+        <div className="mx-auto max-w-[68rem] px-5 py-4 text-center text-xs text-muted-foreground sm:px-8 lg:px-12 xl:px-16">
+          CodeBlock, Built by Kartik
+        </div>
       </div>
     </footer>
   );
