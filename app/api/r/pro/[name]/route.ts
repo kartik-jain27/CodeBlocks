@@ -19,7 +19,7 @@ export async function GET(request: Request, context: ProRegistryRouteContext) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { allowed, retryAfterSeconds } = checkRateLimit(`pro:${token}`, 120);
+  const { allowed, retryAfterSeconds } = await checkRateLimit(`pro:${token}`, 120);
 
   if (!allowed) {
     return NextResponse.json(

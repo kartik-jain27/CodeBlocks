@@ -13,7 +13,7 @@ interface RegistryRouteContext {
 export async function GET(request: Request, context: RegistryRouteContext) {
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const { allowed, retryAfterSeconds } = checkRateLimit(`free:${ip}`, 60);
+  const { allowed, retryAfterSeconds } = await checkRateLimit(`free:${ip}`, 60);
 
   if (!allowed) {
     return NextResponse.json(

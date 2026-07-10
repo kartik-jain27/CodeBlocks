@@ -1,13 +1,42 @@
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
 const WINDOW_MS = 60_000;
 const buckets = new Map<string, { count: number; resetAt: number }>();
+const upstashLimiters = new Map<number, Ratelimit>();
 
-// In-memory rate limiting resets on server restart and is not shared across
-// multiple instances. That is acceptable while CodeBlocks is single-instance;
-// revisit this with Upstash Redis if the app moves to multiple regions.
-export function checkRateLimit(
+interface RateLimitResult {
+  allowed: boolean;
+  retryAfterSeconds: number;
+}
+
+function hasUpstashConfig() {
+  return Boolean(
+    process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN,
+  );
+}
+
+function getUpstashLimiter(limit: number) {
+  const existing = upstashLimiters.get(limit);
+
+  if (existing) {
+    return existing;
+  }
+
+  const limiter = new Ratelimit({
+    redis: Redis.fromEnv(),
+    limiter: Ratelimit.slidingWindow(limit, "1 m"),
+    prefix: `codeblocks:registry:${limit}`,
+  });
+
+  upstashLimiters.set(limit, limiter);
+  return limiter;
+}
+
+function checkMemoryRateLimit(
   key: string,
   limit: number,
-): { allowed: boolean; retryAfterSeconds: number } {
+): RateLimitResult {
   const now = Date.now();
   const bucket = buckets.get(key);
 
@@ -25,4 +54,30 @@ export function checkRateLimit(
 
   bucket.count += 1;
   return { allowed: true, retryAfterSeconds: 0 };
+}
+
+export async function checkRateLimit(
+  key: string,
+  limit: number,
+): Promise<RateLimitResult> {
+  if (!hasUpstashConfig()) {
+    return checkMemoryRateLimit(key, limit);
+  }
+
+  let result: Awaited<ReturnType<Ratelimit["limit"]>>;
+
+  try {
+    result = await getUpstashLimiter(limit).limit(key);
+  } catch {
+    return checkMemoryRateLimit(key, limit);
+  }
+
+  if (result.success) {
+    return { allowed: true, retryAfterSeconds: 0 };
+  }
+
+  return {
+    allowed: false,
+    retryAfterSeconds: Math.max(1, Math.ceil((result.reset - Date.now()) / 1000)),
+  };
 }

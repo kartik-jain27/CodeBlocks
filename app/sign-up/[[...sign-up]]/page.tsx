@@ -14,16 +14,7 @@ export default function SignUpPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
       {hasClerk ? (
-        <SignUp
-          appearance={{
-            variables: {
-              colorPrimary: "#f4f0df",
-              colorBackground: "#121210",
-              colorText: "#f4f0df",
-              colorTextSecondary: "#c9c3ad",
-            },
-          }}
-        />
+        <SignUp />
       ) : (
         <div className="max-w-md rounded-2xl bg-surface p-6 text-center shadow-[var(--neo-raised-lg)]">
           <h1 className="text-2xl font-semibold text-foreground">
