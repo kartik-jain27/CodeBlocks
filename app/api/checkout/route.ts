@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { hasServerClerk } from "@/lib/clerk";
 import { createPolarClient } from "@/lib/polar-server";
+import { getAppUrl } from "@/lib/site-config";
 
 export async function POST(request: Request) {
   if (!hasServerClerk()) {
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
 
   const user = await currentUser();
   const customerEmail = user?.primaryEmailAddress?.emailAddress;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = getAppUrl();
 
   if (!process.env.POLAR_ACCESS_TOKEN) {
     return NextResponse.json(

@@ -1,5 +1,6 @@
 "use client";
 
+import { SignedIn, SignedOut, useClerk } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -12,7 +13,6 @@ const mobileLinks = [
   { href: "/pricing", label: "Pricing" },
   { href: "/docs", label: "Docs" },
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/account", label: "Account" },
 ];
 
 interface MobileNavProps {
@@ -21,6 +21,8 @@ interface MobileNavProps {
 
 export function MobileNav({ showThemeToggle }: MobileNavProps) {
   const [open, setOpen] = useState(false);
+  const { signOut } = useClerk();
+  const hasClerk = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
   const Icon = open ? X : Menu;
 
   function closeMenu() {
@@ -55,16 +57,53 @@ export function MobileNav({ showThemeToggle }: MobileNavProps) {
             ))}
           </nav>
           <div className="mt-2 grid gap-2 border-t border-border-muted pt-2">
-            <Button asChild variant="ghost" className="justify-start">
-              <Link href="/sign-in" onClick={closeMenu}>
-                Sign in
-              </Link>
-            </Button>
-            <Button asChild className="justify-start">
-              <Link href="/sign-up" onClick={closeMenu}>
-                Get free blocks
-              </Link>
-            </Button>
+            {hasClerk ? (
+              <>
+                <SignedOut>
+                  <Button asChild variant="ghost" className="justify-start">
+                    <Link href="/sign-in" onClick={closeMenu}>
+                      Sign in
+                    </Link>
+                  </Button>
+                  <Button asChild className="justify-start">
+                    <Link href="/sign-up" onClick={closeMenu}>
+                      Get free blocks
+                    </Link>
+                  </Button>
+                </SignedOut>
+                <SignedIn>
+                  <Button asChild className="justify-start">
+                    <Link href="/account" onClick={closeMenu}>
+                      Account
+                    </Link>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="justify-start"
+                    onClick={() => {
+                      closeMenu();
+                      signOut({ redirectUrl: "/" });
+                    }}
+                  >
+                    Sign out
+                  </Button>
+                </SignedIn>
+              </>
+            ) : (
+              <>
+                <Button asChild variant="ghost" className="justify-start">
+                  <Link href="/sign-in" onClick={closeMenu}>
+                    Sign in
+                  </Link>
+                </Button>
+                <Button asChild className="justify-start">
+                  <Link href="/sign-up" onClick={closeMenu}>
+                    Get free blocks
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       ) : null}

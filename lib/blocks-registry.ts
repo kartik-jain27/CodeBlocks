@@ -1,3 +1,5 @@
+import { getAppUrl } from "@/lib/site-config";
+
 export type BlockCategory =
   | "hero"
   | "features"
@@ -220,7 +222,7 @@ export function getCategory(category: string) {
 }
 
 export function getInstallCommand(block: BlockRegistryItem) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = getAppUrl();
   const endpoint = block.isPro ? `/r/pro/${block.name}` : `/r/${block.name}`;
 
   return `npx shadcn@latest add ${appUrl}${endpoint}`;

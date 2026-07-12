@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/marketing/site-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { hasServerClerk } from "@/lib/clerk";
+import { getAppUrl } from "@/lib/site-config";
 import { createClient } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -47,7 +48,7 @@ export default async function AccountPage() {
     }
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = getAppUrl();
 
   return (
     <>

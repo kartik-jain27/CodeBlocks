@@ -13,6 +13,8 @@ const productLinks = [
 const resourceLinks = [
   { href: "/docs", label: "Docs" },
   { href: "/account", label: "Account" },
+  { href: "/privacy", label: "Privacy" },
+  { href: "/terms", label: "Terms" },
 ];
 
 function GithubIcon() {

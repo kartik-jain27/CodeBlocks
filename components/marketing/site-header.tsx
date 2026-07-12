@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
 
 import { AccountProfileButton } from "@/components/auth/account-profile-button";
@@ -6,7 +6,6 @@ import { BrandMark } from "@/components/brand-mark";
 import { MobileNav } from "@/components/marketing/mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
-import { clerkUserProfileAppearance } from "@/lib/clerk-appearance";
 
 const navItems = [
   { href: "/blocks", label: "Blocks" },
@@ -50,10 +49,6 @@ export function SiteHeader({ showThemeToggle = true }: SiteHeaderProps) {
               </SignedOut>
               <SignedIn>
                 <AccountProfileButton />
-                <UserButton
-                  appearance={clerkUserProfileAppearance}
-                  userProfileProps={{ appearance: clerkUserProfileAppearance }}
-                />
                 {showThemeToggle ? <ThemeToggle size="compact" /> : null}
               </SignedIn>
             </>

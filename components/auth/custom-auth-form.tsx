@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 
 type AuthMode = "sign-in" | "sign-up";
 type OAuthStrategy = "oauth_github" | "oauth_google";
+type AuthStep = "details" | "verify" | "reset-code" | "new-password";
 
 interface CustomAuthFormProps {
   mode: AuthMode;
@@ -33,6 +34,22 @@ function clerkErrorMessage(error: unknown) {
   }
 
   return "Authentication failed. Please try again.";
+}
+
+function getSafeRedirectTarget() {
+  if (typeof window === "undefined") {
+    return "/";
+  }
+
+  const redirectUrl = new URLSearchParams(window.location.search).get(
+    "redirect_url",
+  );
+
+  if (redirectUrl?.startsWith("/") && !redirectUrl.startsWith("//")) {
+    return redirectUrl;
+  }
+
+  return "/";
 }
 
 function SocialButton({
@@ -71,15 +88,28 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [code, setCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [step, setStep] = useState<"details" | "verify">("details");
+  const [step, setStep] = useState<AuthStep>("details");
 
-  const title = isSignUp ? "Create your account" : "Sign in to CodeBlocks";
-  const subtitle = isSignUp
-    ? "Welcome! Please fill in the details to get started."
-    : "Welcome back! Please sign in to continue.";
+  const title =
+    step === "reset-code"
+      ? "Check your email"
+      : step === "new-password"
+        ? "Create a new password"
+        : isSignUp
+          ? "Create your account"
+          : "Sign in to CodeBlocks";
+  const subtitle =
+    step === "reset-code"
+      ? "Enter the reset code we sent to your email."
+      : step === "new-password"
+        ? "Choose a new password for your account."
+        : isSignUp
+          ? "Welcome! Please fill in the details to get started."
+          : "Welcome back! Please sign in to continue.";
   const switchHref = isSignUp ? "/sign-in" : "/sign-up";
   const switchText = isSignUp
     ? "Already have an account?"
@@ -100,7 +130,7 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
       await authResource?.authenticateWithRedirect({
         strategy,
         redirectUrl: "/sso-callback",
-        redirectUrlComplete: "/",
+        redirectUrlComplete: getSafeRedirectTarget(),
       });
     } catch (authError) {
       setError(clerkErrorMessage(authError));
@@ -131,7 +161,7 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
             }
 
             await setActive({ session: result.createdSessionId });
-            router.push("/");
+            router.push(getSafeRedirectTarget());
             return;
           }
 
@@ -155,6 +185,53 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
       }
 
       const { signIn, setActive } = signInState;
+
+      if (step === "reset-code") {
+        const result = await signIn?.attemptFirstFactor({
+          strategy: "reset_password_email_code",
+          code,
+        });
+
+        if (result?.status === "needs_new_password") {
+          setStep("new-password");
+          return;
+        }
+
+        if (result?.status === "complete") {
+          if (!setActive) {
+            setError("Your password was reset, but the session could not start.");
+            return;
+          }
+
+          await setActive({ session: result.createdSessionId });
+          router.push(getSafeRedirectTarget());
+          return;
+        }
+
+        setError("The reset code could not be verified. Please try again.");
+        return;
+      }
+
+      if (step === "new-password") {
+        const result = await signIn?.resetPassword({
+          password: newPassword,
+        });
+
+        if (result?.status === "complete") {
+          if (!setActive) {
+            setError("Your password was reset, but the session could not start.");
+            return;
+          }
+
+          await setActive({ session: result.createdSessionId });
+          router.push(getSafeRedirectTarget());
+          return;
+        }
+
+        setError("Password reset is not complete yet. Please try again.");
+        return;
+      }
+
       const result = await signIn?.create({
         identifier: email,
         password,
@@ -167,7 +244,7 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
         }
 
         await setActive({ session: result.createdSessionId });
-        router.push("/");
+        router.push(getSafeRedirectTarget());
         return;
       }
 
@@ -179,8 +256,45 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
     }
   }
 
+  async function handlePasswordResetStart() {
+    if (!isLoaded || isSignUp || !signInState.signIn) return;
+
+    setError("");
+
+    if (!email.trim()) {
+      setError("Enter your email address first, then request a reset code.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await signInState.signIn.create({
+        strategy: "reset_password_email_code",
+        identifier: email.trim(),
+      });
+
+      setCode("");
+      setNewPassword("");
+      setPassword("");
+      setStep("reset-code");
+    } catch (authError) {
+      setError(clerkErrorMessage(authError));
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   const primaryLabel =
-    step === "verify"
+    step === "reset-code"
+      ? isSubmitting
+        ? "Checking..."
+        : "Verify reset code"
+      : step === "new-password"
+        ? isSubmitting
+          ? "Updating..."
+          : "Update password"
+        : step === "verify"
       ? isSubmitting
         ? "Verifying..."
         : "Verify email"
@@ -238,7 +352,7 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
       ) : null}
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-        {step === "verify" ? (
+        {step === "verify" || step === "reset-code" ? (
           <div className="space-y-2">
             <Label htmlFor="verification-code">Verification code</Label>
             <Input
@@ -247,6 +361,20 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
               onChange={(event) => setCode(event.target.value)}
               placeholder="Enter the code from your email"
               autoComplete="one-time-code"
+              required
+              className="h-12 bg-surface-hover"
+            />
+          </div>
+        ) : step === "new-password" ? (
+          <div className="space-y-2">
+            <Label htmlFor="new-password">New password</Label>
+            <Input
+              id="new-password"
+              type="password"
+              value={newPassword}
+              onChange={(event) => setNewPassword(event.target.value)}
+              placeholder="Enter a new password"
+              autoComplete="new-password"
               required
               className="h-12 bg-surface-hover"
             />
@@ -295,7 +423,19 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <div className="flex items-center justify-between gap-3">
+                <Label htmlFor="password">Password</Label>
+                {!isSignUp ? (
+                  <button
+                    type="button"
+                    disabled={!isLoaded || isSubmitting}
+                    onClick={handlePasswordResetStart}
+                    className="text-xs font-semibold text-muted-foreground transition hover:text-foreground disabled:pointer-events-none disabled:opacity-60"
+                  >
+                    Forgot password?
+                  </button>
+                ) : null}
+              </div>
               <Input
                 id="password"
                 type="password"
@@ -330,12 +470,25 @@ export function CustomAuthForm({ mode }: CustomAuthFormProps) {
         </Button>
       </form>
 
-      <p className="mt-5 text-center text-sm text-muted-foreground">
-        {switchText}{" "}
-        <Link href={switchHref} className="font-bold text-foreground">
-          {switchAction}
-        </Link>
-      </p>
+      {step === "reset-code" || step === "new-password" ? (
+        <button
+          type="button"
+          onClick={() => {
+            setError("");
+            setStep("details");
+          }}
+          className="mt-5 w-full text-center text-sm font-bold text-foreground"
+        >
+          Back to sign in
+        </button>
+      ) : (
+        <p className="mt-5 text-center text-sm text-muted-foreground">
+          {switchText}{" "}
+          <Link href={switchHref} className="font-bold text-foreground">
+            {switchAction}
+          </Link>
+        </p>
+      )}
     </section>
   );
 }

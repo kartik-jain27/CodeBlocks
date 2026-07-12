@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 
 import { clerkAppearance } from "@/lib/clerk-appearance";
+import { getAppUrl } from "@/lib/site-config";
 
 import "./globals.css";
 
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
   title: "CodeBlocks - Production-ready shadcn/ui blocks",
   description:
     "shadcn/ui blocks for SaaS developers. Install any block in one command.",
-  metadataBase: new URL("https://codeblocks.dev"),
+  metadataBase: new URL(getAppUrl()),
   icons: {
     icon: [
       { url: "/favicon.png?v=3", sizes: "64x64", type: "image/png" },

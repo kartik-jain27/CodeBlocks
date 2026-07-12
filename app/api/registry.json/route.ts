@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 
 import { blocksRegistry } from "@/lib/blocks-registry";
+import { getAppUrl } from "@/lib/site-config";
 
 export async function GET() {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = getAppUrl();
 
   return NextResponse.json({
     "$schema": "https://ui.shadcn.com/schema/registry.json",
