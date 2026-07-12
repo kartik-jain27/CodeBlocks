@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 const mobileLinks = [
   { href: "/blocks", label: "Blocks" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/docs", label: "Docs" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/account", label: "Account" },
 ];

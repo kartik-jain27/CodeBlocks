@@ -2,8 +2,10 @@ import Link from "next/link";
 
 import { CategoryGrid } from "@/components/category-grid";
 import { PageContainer } from "@/components/layout/page-container";
+import { SiteFaq } from "@/components/marketing/site-faq";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { SiteHeader } from "@/components/marketing/site-header";
+import { ValueProps } from "@/components/marketing/value-props";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { blocksRegistry } from "@/lib/blocks-registry";
@@ -18,18 +20,16 @@ export default function LandingPage() {
         <main className="flex min-w-0 flex-col gap-10">
           <section className="relative flex min-h-[620px] w-full min-w-0 flex-col items-center justify-center overflow-hidden rounded-[2rem] bg-surface px-6 py-24 text-center shadow-[var(--hero-shadow)] sm:px-8 lg:min-h-[640px]">
             <div className="relative z-10 flex w-full min-w-0 max-w-full flex-col items-center">
-              <h1 className="hero-heading mx-auto max-w-4xl text-foreground">
-                <span className="mx-auto block max-w-[13ch] text-2xl font-bold leading-[1.08] tracking-normal sm:max-w-none sm:text-3xl lg:text-[2rem]">
-                  <span className="text-muted-foreground">Production-ready</span>{" "}
-                  shadcn/ui{" "}
-                  <span className="text-muted-foreground">Blocks</span>
-                </span>
-                <span className="mt-2 block text-3xl font-bold leading-[1.05] tracking-normal sm:text-5xl lg:text-6xl">
-                  <span className="text-muted-foreground">for</span> Busy{" "}
-                  <span className="text-muted-foreground">&amp;</span> Smart{" "}
-                  <span className="text-muted-foreground">devs</span>
-                </span>
+              <h1 className="hero-heading mx-auto max-w-[18ch] text-4xl font-bold leading-[1.04] tracking-normal text-foreground sm:max-w-none sm:text-5xl lg:text-[3.5rem]">
+                <span className="text-muted-foreground">Build</span> products.{" "}
+                <span className="text-muted-foreground">Not</span> repetitive UI.
               </h1>
+              <p className="mt-6 max-w-3xl text-base leading-7 text-muted-foreground sm:text-lg">
+                Production-ready UI blocks for modern SaaS apps. Designed to help developers
+                <br className="hidden sm:block" />
+                <span className="sm:hidden"> </span>
+                and founders launch polished products&mdash;faster.
+              </p>
 
               <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
                 <Button
@@ -70,8 +70,11 @@ export default function LandingPage() {
             </div>
           </section>
           
+          <ValueProps />
+
           <CategoryGrid />
-          
+
+          <SiteFaq />
         </main>
       </PageContainer>
       <SiteFooter />

@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 import { getBlockRegistry } from "@/lib/blocks-registry";
@@ -37,25 +37,70 @@ async function getFavoriteContext(request: Request) {
     };
   }
 
+  let supabase;
+
   try {
-    const supabase = createClient();
-    const { data: user, error } = await supabase
-      .from("users")
-      .select("id")
-      .eq("clerk_id", userId)
-      .single();
-
-    if (error || !user?.id) {
-      return {
-        response: NextResponse.json({ error: "User not found" }, { status: 404 }),
-      };
-    }
-
-    return { blockName, supabase, userId: user.id };
+    supabase = createClient();
   } catch {
     return {
       response: NextResponse.json(
-        { error: "Supabase is not configured" },
+        { error: "Favorites need Supabase server keys in .env.local." },
+        { status: 503 },
+      ),
+    };
+  }
+
+  try {
+    const { data: existingUser, error: lookupError } = await supabase
+      .from("users")
+      .select("id")
+      .eq("clerk_id", userId)
+      .maybeSingle();
+
+    if (lookupError) {
+      throw lookupError;
+    }
+
+    if (existingUser?.id) {
+      return { blockName, supabase, userId: existingUser.id };
+    }
+
+    const clerkUser = await currentUser();
+    const email =
+      clerkUser?.primaryEmailAddress?.emailAddress ??
+      clerkUser?.emailAddresses[0]?.emailAddress;
+
+    if (!email) {
+      return {
+        response: NextResponse.json(
+          { error: "Your account email is missing, so favorites cannot sync." },
+          { status: 409 },
+        ),
+      };
+    }
+
+    const { data: syncedUser, error: syncError } = await supabase
+      .from("users")
+      .upsert(
+        {
+          clerk_id: userId,
+          email,
+        },
+        { onConflict: "clerk_id" },
+      )
+      .select("id")
+      .single();
+
+    if (syncError || !syncedUser?.id) {
+      throw syncError ?? new Error("User sync failed");
+    }
+
+    return { blockName, supabase, userId: syncedUser.id };
+  } catch (error) {
+    console.error("Favorite context failed", error);
+    return {
+      response: NextResponse.json(
+        { error: "Favorites database is not ready yet." },
         { status: 500 },
       ),
     };
@@ -80,9 +125,10 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ favorited: true });
-  } catch {
+  } catch (error) {
+    console.error("Favorite create failed", error);
     return NextResponse.json(
-      { error: "Supabase is not configured" },
+      { error: "Favorite could not be saved." },
       { status: 500 },
     );
   }
@@ -107,9 +153,10 @@ export async function DELETE(request: Request) {
     }
 
     return NextResponse.json({ favorited: false });
-  } catch {
+  } catch (error) {
+    console.error("Favorite delete failed", error);
     return NextResponse.json(
-      { error: "Supabase is not configured" },
+      { error: "Favorite could not be removed." },
       { status: 500 },
     );
   }

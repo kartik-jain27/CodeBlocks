@@ -45,11 +45,17 @@ export function FavoriteButton({
       });
 
       if (!response.ok) {
-        throw new Error("Favorite could not be saved");
+        const payload = (await response.json().catch(() => null)) as {
+          error?: string;
+        } | null;
+
+        throw new Error(payload?.error ?? "Favorite could not be saved.");
       }
-    } catch {
+    } catch (error) {
       setFavorited(!nextFavorited);
-      setError("Favorite could not be saved.");
+      setError(
+        error instanceof Error ? error.message : "Favorite could not be saved.",
+      );
     } finally {
       setIsSaving(false);
     }
