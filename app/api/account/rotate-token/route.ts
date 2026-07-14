@@ -20,16 +20,21 @@ export async function POST() {
 
   try {
     const supabase = createClient();
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("users")
       .update({ registry_token: newToken })
-      .eq("clerk_id", userId);
+      .eq("clerk_id", userId)
+      .select("registry_token")
+      .single();
 
-    if (error) {
-      throw error;
+    if (error || !data) {
+      return NextResponse.json(
+        { error: "No account found to update. Try signing in again." },
+        { status: 404 },
+      );
     }
 
-    return NextResponse.json({ registryToken: newToken });
+    return NextResponse.json({ registryToken: data.registry_token });
   } catch {
     return NextResponse.json(
       { error: "Supabase is not configured" },
