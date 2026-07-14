@@ -12,7 +12,6 @@ const mobileLinks = [
   { href: "/blocks", label: "Blocks" },
   { href: "/pricing", label: "Pricing" },
   { href: "/docs", label: "Docs" },
-  { href: "/dashboard", label: "Dashboard" },
 ];
 
 interface MobileNavProps {
@@ -55,6 +54,17 @@ export function MobileNav({ showThemeToggle }: MobileNavProps) {
                 {item.label}
               </Link>
             ))}
+            {hasClerk ? (
+              <SignedIn>
+                <Link
+                  href="/dashboard"
+                  onClick={closeMenu}
+                  className="rounded-xl px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground"
+                >
+                  Dashboard
+                </Link>
+              </SignedIn>
+            ) : null}
           </nav>
           <div className="mt-2 grid gap-2 border-t border-border-muted pt-2">
             {hasClerk ? (

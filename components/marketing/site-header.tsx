@@ -11,7 +11,6 @@ const navItems = [
   { href: "/blocks", label: "Blocks" },
   { href: "/pricing", label: "Pricing" },
   { href: "/docs", label: "Docs" },
-  { href: "/dashboard", label: "Dashboard" },
 ];
 
 interface SiteHeaderProps {
@@ -34,6 +33,13 @@ export function SiteHeader({ showThemeToggle = true }: SiteHeaderProps) {
               {item.label}
             </Link>
           ))}
+          {hasClerk ? (
+            <SignedIn>
+              <Link href="/dashboard" className="hover:text-foreground">
+                Dashboard
+              </Link>
+            </SignedIn>
+          ) : null}
         </nav>
         <div className="hidden items-center gap-2 md:flex">
           {hasClerk ? (

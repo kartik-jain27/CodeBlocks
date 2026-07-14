@@ -260,39 +260,6 @@ body {
   box-shadow: none;
 }
 
-/* Clerk renders account UI in a portal. Keep this narrowly scoped so the modal body remains intact. */
-.cl-userButtonPopoverFooter,
-.cl-userProfileFooter,
-.cl-userProfileNavbarFooter {
-  height: 0 !important;
-  min-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  visibility: hidden !important;
-}
-
-.cl-userProfileNavbar {
-  position: relative !important;
-  overflow: hidden !important;
-}
-
-.cl-userProfileNavbar::after {
-  content: "";
-  position: absolute;
-  z-index: 20;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 8rem;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--surface-hover) 0%, transparent),
-    var(--surface-hover) 32%,
-    var(--surface-hover)
-  );
-}
 
 .block-preview-scope :is(button, input) {
   border-width: 1px;
