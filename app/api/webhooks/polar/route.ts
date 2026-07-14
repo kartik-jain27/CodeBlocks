@@ -129,27 +129,52 @@ export async function POST(request: Request) {
 
     try {
       const supabase = createClient();
-      let query = supabase
+
+      if (externalId) {
+        const { data, error } = await supabase
+          .from("users")
+          .upsert(
+            {
+              clerk_id: externalId,
+              email: customerEmail ?? "",
+              is_pro: true,
+              pro_purchased_at: new Date().toISOString(),
+              polar_customer_id: event.data.customer?.id,
+            },
+            { onConflict: "clerk_id" },
+          )
+          .select("id")
+          .single();
+
+        if (error || !data?.id) {
+          return NextResponse.json(
+            { error: "Failed to upsert user by clerk_id" },
+            { status: 500 },
+          );
+        }
+
+        return NextResponse.json({ received: true, updated: true });
+      }
+
+      const { data, error } = await supabase
         .from("users")
         .update({
           is_pro: true,
           pro_purchased_at: new Date().toISOString(),
           polar_customer_id: event.data.customer?.id,
-        });
+        })
+        .eq("email", customerEmail)
+        .select("id")
+        .maybeSingle();
 
-      if (externalId) {
-        query = query.eq("clerk_id", externalId);
-      } else {
-        query = query.eq("email", customerEmail);
+      if (error || !data?.id) {
+        return NextResponse.json(
+          { error: "No matching user found by email yet" },
+          { status: 409 },
+        );
       }
 
-      const { data, error } = await query.select("id").maybeSingle();
-
-      if (error) {
-        throw error;
-      }
-
-      return NextResponse.json({ received: true, updated: Boolean(data?.id) });
+      return NextResponse.json({ received: true, updated: true });
     } catch {
       return NextResponse.json(
         { error: "Pro unlock failed" },
