@@ -26,7 +26,8 @@ export default async function AccountPage() {
   }
 
   const user = clerkConfigured ? await currentUser() : null;
-  let registryToken = "Set Supabase env vars to fetch your token";
+  let registryToken: string | null = null;
+  let registryTokenStatus = "No registry token is available for this account yet";
   let isPro = false;
 
   if (userId) {
@@ -40,11 +41,14 @@ export default async function AccountPage() {
 
       if (data?.registry_token) {
         registryToken = data.registry_token;
+      } else {
+        registryTokenStatus =
+          "No registry token is available for this account yet";
       }
 
       isPro = Boolean(data?.is_pro);
     } catch {
-      registryToken = "Supabase is not configured for this environment";
+      registryTokenStatus = "Supabase is not configured for this environment";
     }
   }
 
@@ -88,6 +92,7 @@ export default async function AccountPage() {
                 <AccountRegistryToken
                   appUrl={appUrl}
                   initialRegistryToken={registryToken}
+                  unavailableMessage={registryTokenStatus}
                 />
               </div>
             </div>

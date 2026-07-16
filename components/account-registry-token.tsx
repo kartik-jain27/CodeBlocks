@@ -9,12 +9,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface AccountRegistryTokenProps {
   appUrl: string;
-  initialRegistryToken: string;
+  initialRegistryToken: string | null;
+  unavailableMessage: string;
 }
 
 export function AccountRegistryToken({
   appUrl,
   initialRegistryToken,
+  unavailableMessage,
 }: AccountRegistryTokenProps) {
   const [registryToken, setRegistryToken] = useState(initialRegistryToken);
   const configSnippet = useMemo(
@@ -23,7 +25,7 @@ export function AccountRegistryToken({
     "codeblocks": {
       "url": "${appUrl}/r/pro/{name}",
       "headers": {
-        "Authorization": "Bearer ${registryToken}"
+        "Authorization": "Bearer ${registryToken ?? "<no token available>"}"
       }
     }
   }
@@ -42,19 +44,23 @@ export function AccountRegistryToken({
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto rounded-xl bg-surface p-3 font-mono text-xs text-muted-foreground shadow-[var(--neo-inset-sm)]">
-            {registryToken}
+            {registryToken ?? unavailableMessage}
           </div>
-          <div className="mt-4 flex flex-wrap items-start gap-3">
-            <CopyCommandButton
-              command={registryToken}
-              label="Copy registry token"
-            />
-            <RotateTokenButton onRotated={setRegistryToken} />
-          </div>
-          <p className="mt-3 text-xs leading-6 text-muted-foreground">
-            Rotating your token immediately invalidates the old one for Pro
-            registry installs.
-          </p>
+          {registryToken ? (
+            <>
+              <div className="mt-4 flex flex-wrap items-start gap-3">
+                <CopyCommandButton
+                  command={registryToken}
+                  label="Copy registry token"
+                />
+                <RotateTokenButton onRotated={setRegistryToken} />
+              </div>
+              <p className="mt-3 text-xs leading-6 text-muted-foreground">
+                Rotating your token immediately invalidates the old one for Pro
+                registry installs.
+              </p>
+            </>
+          ) : null}
         </CardContent>
       </Card>
       <Card>

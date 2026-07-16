@@ -15,7 +15,7 @@ export const pricingTiers = [
   },
   {
     name: "Pro",
-    price: "$97",
+    price: "$89",
     description: "Lifetime access to every pro block in CodeBlocks.",
     cta: "Unlock Pro",
     href: getPolarCheckoutUrl(process.env.NEXT_PUBLIC_POLAR_PRO_PRODUCT_ID),
@@ -29,11 +29,12 @@ export const pricingTiers = [
   },
   {
     name: "Team",
-    price: "$297",
+    price: "",
     description: "A shared license for small product teams.",
-    cta: "Buy Team",
-    href: getPolarCheckoutUrl(process.env.NEXT_PUBLIC_POLAR_TEAM_PRODUCT_ID),
+    cta: "Coming soon",
+    href: "/pricing",
     featured: false,
+    comingSoon: true,
     features: [
       "Everything in Pro",
       "5 seats",

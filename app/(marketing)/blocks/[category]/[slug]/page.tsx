@@ -134,7 +134,7 @@ export default async function BlockDetailPage({ params }: BlockDetailPageProps) 
   const installPrompt = `Install the ${block.title} block into this project.
 Steps:
 1. Ensure this is a Next.js + shadcn project with components.json
-2. Run: npx shadcn@latest add https://codeblocks.dev/r/${block.name}
+2. Run: ${installCommand}
 After install, summarize what was added and any next steps.`;
 
   return (

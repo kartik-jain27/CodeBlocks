@@ -2,6 +2,7 @@
 
 import { useClerk, useUser } from "@clerk/nextjs";
 import { LogOut, Settings } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { clerkUserProfileAppearance } from "@/lib/clerk-appearance";
@@ -42,8 +43,8 @@ export function AccountProfileButton() {
 
   return (
     <div ref={menuRef} className="relative flex items-center gap-2">
-      <Button type="button" variant="outline" onClick={openAccount}>
-        Account
+      <Button asChild variant="outline">
+        <Link href="/account">Account</Link>
       </Button>
       <button
         type="button"

@@ -60,34 +60,50 @@ export default function PricingPage() {
                     </div>
                     <CardDescription>{tier.description}</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="text-4xl font-semibold">{tier.price}</div>
-                    {tier.name === "Hobby" ? (
-                      <Button
-                        asChild
-                        className="mt-6 w-full"
-                        variant={tier.featured ? "default" : "outline"}
-                      >
-                        <Link href={tier.href}>{tier.cta}</Link>
-                      </Button>
-                    ) : (
-                      <PricingButton
-                        productId={polarProductIds[tier.name]}
-                        label={tier.cta}
-                        featured={tier.featured}
-                      />
-                    )}
-                    <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
-                      {tier.features.map((feature) => (
-                        <li key={feature} className="flex items-center gap-2">
-                          <Check
-                            aria-hidden="true"
-                            className="size-4 text-foreground"
-                          />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
+                  <CardContent className={tier.comingSoon ? "relative" : undefined}>
+                    {tier.comingSoon ? (
+                      <div className="absolute inset-0 z-10 flex items-center justify-center">
+                        <span className="rounded-full bg-background/85 px-5 py-2 text-sm font-semibold shadow-[var(--neo-raised)]">
+                          Coming soon
+                        </span>
+                      </div>
+                    ) : null}
+                    <div className={tier.comingSoon ? "blur-sm" : undefined}>
+                      {tier.price ? (
+                        <div className="text-4xl font-semibold">{tier.price}</div>
+                      ) : null}
+                      {tier.name === "Hobby" || tier.comingSoon ? (
+                        <Button
+                          asChild={!tier.comingSoon}
+                          disabled={tier.comingSoon}
+                          className="mt-6 w-full"
+                          variant={tier.featured ? "default" : "outline"}
+                        >
+                          {tier.comingSoon ? (
+                            tier.cta
+                          ) : (
+                            <Link href={tier.href}>{tier.cta}</Link>
+                          )}
+                        </Button>
+                      ) : (
+                        <PricingButton
+                          productId={polarProductIds[tier.name]}
+                          label={tier.cta}
+                          featured={tier.featured}
+                        />
+                      )}
+                      <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
+                        {tier.features.map((feature) => (
+                          <li key={feature} className="flex items-center gap-2">
+                            <Check
+                              aria-hidden="true"
+                              className="size-4 text-foreground"
+                            />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
