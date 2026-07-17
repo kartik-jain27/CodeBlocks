@@ -39,8 +39,10 @@ export async function POST(request: Request) {
   const appUrl = getAppUrl();
 
   if (!process.env.POLAR_ACCESS_TOKEN) {
+    const error = new Error("Missing POLAR_ACCESS_TOKEN.");
+    console.error(error);
     return NextResponse.json(
-      { error: "Checkout could not be created" },
+      { error: error.message },
       { status: 500 },
     );
   }
@@ -55,9 +57,12 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ url: checkout.url });
-  } catch {
+  } catch (error) {
+    console.error(error);
     return NextResponse.json(
-      { error: "Checkout could not be created" },
+      {
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 },
     );
   }
