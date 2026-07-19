@@ -3,10 +3,6 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
-// NOTE: the refund-window answer below has a placeholder — decide your real
-// refund policy before launch and replace "[X]" with an actual number of days
-// (or remove the sentence if you don't offer refunds). Don't ship a fabricated
-// commitment here.
 const faqs = [
   {
     question: "Can I use CodeBlocks for client and commercial projects?",
@@ -31,7 +27,7 @@ const faqs = [
   {
     question: "Can I get a refund?",
     answer:
-      "We offer refunds within [X] days of purchase if a block doesn't work as documented — reach out and we'll sort it out.",
+      "Because this is a one-time digital purchase, we do not offer refunds.",
   },
 ];
 

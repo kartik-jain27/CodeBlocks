@@ -8,10 +8,14 @@ import { SiteHeader } from "@/components/marketing/site-header";
 import { ValueProps } from "@/components/marketing/value-props";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
-import { blocksRegistry } from "@/lib/blocks-registry";
+import { blocksRegistry, getBlockRegistry, getInstallCommand } from "@/lib/blocks-registry";
 
 export default function LandingPage() {
   const freeBlockCount = blocksRegistry.filter((block) => !block.isPro).length;
+  const heroExampleBlock = getBlockRegistry("hero-1");
+  const heroExampleCommand = heroExampleBlock
+    ? getInstallCommand(heroExampleBlock)
+    : "npx shadcn@latest add hero-1";
 
   return (
     <>
@@ -51,9 +55,7 @@ export default function LandingPage() {
 
               <div className="mt-9 flex w-full max-w-xl min-w-0 items-center gap-2 overflow-x-auto rounded-xl bg-surface px-5 py-3 font-mono text-xs text-muted-foreground shadow-[var(--neo-inset-sm)] sm:text-sm">
                 <span className="select-none text-accent">$</span>
-                <span className="whitespace-nowrap">
-                  npx shadcn@latest add https://codeblocks.dev/r/hero-1
-                </span>
+                <span className="whitespace-nowrap">{heroExampleCommand}</span>
               </div>
 
               <div className="mt-7 flex max-w-full flex-wrap items-center justify-center gap-x-3 gap-y-3 text-[11px] text-muted-foreground sm:gap-x-6 sm:text-xs">
